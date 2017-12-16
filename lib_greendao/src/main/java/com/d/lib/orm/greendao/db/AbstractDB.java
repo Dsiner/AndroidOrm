@@ -7,8 +7,8 @@ import com.d.lib.orm.greendao.operation.AbstractOp;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import de.greenrobot.dao.AbstractDaoMaster;
-import de.greenrobot.dao.AbstractDaoSession;
+import org.greenrobot.greendao.AbstractDaoMaster;
+import org.greenrobot.greendao.AbstractDaoSession;
 
 public abstract class AbstractDB<M extends AbstractDaoMaster, S extends AbstractDaoSession> extends AbstractOp {
     protected SQLiteDatabase db;

@@ -1,9 +1,10 @@
 package com.d.lib.orm.greendao.operation;
 
+import org.greenrobot.greendao.AbstractDao;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import de.greenrobot.dao.AbstractDao;
 
 /**
  * 抽象基本操作

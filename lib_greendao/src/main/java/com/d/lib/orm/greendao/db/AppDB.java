@@ -6,7 +6,7 @@ import com.d.lib.orm.greendao.dao.BookDao;
 import com.d.lib.orm.greendao.dao.DaoMaster;
 import com.d.lib.orm.greendao.dao.DaoSession;
 
-import de.greenrobot.dao.identityscope.IdentityScopeType;
+import org.greenrobot.greendao.identityscope.IdentityScopeType;
 
 /**
  * AppDB
@@ -17,7 +17,7 @@ public abstract class AppDB extends AbstractDB<DaoMaster, DaoSession> {
 
     protected AppDB(Context context) {
         super(context);
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(context.getApplicationContext(), "greendao_v2.db", null);
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(context.getApplicationContext(), "greendao_v3.db", null);
         db = helper.getWritableDatabase();
         // 注意：该数据库连接属于 DaoMaster，所以多个 Session 指的是相同的数据库连接。
         daoMaster = new DaoMaster(db);

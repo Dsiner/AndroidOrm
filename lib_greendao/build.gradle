@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+// Greendao-v3 setting step: 4-2
+apply plugin: 'org.greenrobot.greendao'
 
 android {
     compileSdkVersion 27
@@ -18,6 +20,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    // Greendao-v3 setting step: 4-4
+    greendao {
+        // Database configuration
+        // Database version, need to upgrade the version number after changing the database
+        schemaVersion 1
+        daoPackage 'com.d.lib.orm.greendao.dao'
+        targetGenDir 'src/main/java'
+    }
 }
 
 dependencies {
@@ -28,6 +39,7 @@ dependencies {
 
     implementation project(':lib_common')
     compileOnly 'com.android.support:appcompat-v7:27.1.1'
-    compileOnly "com.google.code.gson:gson:2.7"
-    api 'de.greenrobot:greendao:2.1.0'
+    compileOnly 'com.google.code.gson:gson:2.7'
+    // Greendao-v3 setting step: 4-3
+    api 'org.greenrobot:greendao:3.2.2'
 }

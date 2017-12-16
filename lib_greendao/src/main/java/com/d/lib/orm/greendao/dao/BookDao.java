@@ -1,12 +1,13 @@
 package com.d.lib.orm.greendao.dao;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 
-import de.greenrobot.dao.AbstractDao;
-import de.greenrobot.dao.Property;
-import de.greenrobot.dao.internal.DaoConfig;
+import org.greenrobot.greendao.AbstractDao;
+import org.greenrobot.greendao.Property;
+import org.greenrobot.greendao.internal.DaoConfig;
+import org.greenrobot.greendao.database.Database;
+import org.greenrobot.greendao.database.DatabaseStatement;
 
 import com.d.lib.orm.greendao.bean.Book;
 
@@ -21,14 +22,14 @@ public class BookDao extends AbstractDao<Book, Long> {
     /**
      * Properties of entity Book.<br/>
      * Can be used for QueryBuilder and for referencing column names.
-    */
+     */
     public static class Properties {
-        public final static Property Isbn = new Property(0, Long.class, "isbn", true, "ISBN");
+        public final static Property Isbn = new Property(0, Long.class, "isbn", true, "ISDN");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
         public final static Property Author = new Property(2, String.class, "author", false, "AUTHOR");
         public final static Property Date = new Property(3, Long.class, "date", false, "DATE");
         public final static Property Price = new Property(4, Double.class, "price", false, "PRICE");
-    };
+    }
 
 
     public BookDao(DaoConfig config) {
@@ -40,10 +41,10 @@ public class BookDao extends AbstractDao<Book, Long> {
     }
 
     /** Creates the underlying database table. */
-    public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
+    public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"BOOK\" (" + //
-                "\"ISBN\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: isbn
+                "\"ISDN\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: isbn
                 "\"NAME\" TEXT NOT NULL ," + // 1: name
                 "\"AUTHOR\" TEXT," + // 2: author
                 "\"DATE\" INTEGER," + // 3: date
@@ -51,14 +52,13 @@ public class BookDao extends AbstractDao<Book, Long> {
     }
 
     /** Drops the underlying database table. */
-    public static void dropTable(SQLiteDatabase db, boolean ifExists) {
+    public static void dropTable(Database db, boolean ifExists) {
         String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "\"BOOK\"";
         db.execSQL(sql);
     }
 
-    /** @inheritdoc */
     @Override
-    protected void bindValues(SQLiteStatement stmt, Book entity) {
+    protected final void bindValues(DatabaseStatement stmt, Book entity) {
         stmt.clearBindings();
  
         Long isbn = entity.getIsbn();
@@ -83,13 +83,37 @@ public class BookDao extends AbstractDao<Book, Long> {
         }
     }
 
-    /** @inheritdoc */
+    @Override
+    protected final void bindValues(SQLiteStatement stmt, Book entity) {
+        stmt.clearBindings();
+ 
+        Long isbn = entity.getIsbn();
+        if (isbn != null) {
+            stmt.bindLong(1, isbn);
+        }
+        stmt.bindString(2, entity.getName());
+ 
+        String author = entity.getAuthor();
+        if (author != null) {
+            stmt.bindString(3, author);
+        }
+ 
+        Long date = entity.getDate();
+        if (date != null) {
+            stmt.bindLong(4, date);
+        }
+ 
+        Double price = entity.getPrice();
+        if (price != null) {
+            stmt.bindDouble(5, price);
+        }
+    }
+
     @Override
     public Long readKey(Cursor cursor, int offset) {
         return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
-    /** @inheritdoc */
     @Override
     public Book readEntity(Cursor cursor, int offset) {
         Book entity = new Book( //
@@ -102,7 +126,6 @@ public class BookDao extends AbstractDao<Book, Long> {
         return entity;
     }
      
-    /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, Book entity, int offset) {
         entity.setIsbn(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
@@ -112,14 +135,12 @@ public class BookDao extends AbstractDao<Book, Long> {
         entity.setPrice(cursor.isNull(offset + 4) ? null : cursor.getDouble(offset + 4));
      }
     
-    /** @inheritdoc */
     @Override
-    protected Long updateKeyAfterInsert(Book entity, long rowId) {
+    protected final Long updateKeyAfterInsert(Book entity, long rowId) {
         entity.setIsbn(rowId);
         return rowId;
     }
     
-    /** @inheritdoc */
     @Override
     public Long getKey(Book entity) {
         if(entity != null) {
@@ -129,9 +150,13 @@ public class BookDao extends AbstractDao<Book, Long> {
         }
     }
 
-    /** @inheritdoc */
-    @Override    
-    protected boolean isEntityUpdateable() {
+    @Override
+    public boolean hasKey(Book entity) {
+        return entity.getIsbn() != null;
+    }
+
+    @Override
+    protected final boolean isEntityUpdateable() {
         return true;
     }
     
