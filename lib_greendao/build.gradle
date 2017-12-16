@@ -1,11 +1,10 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 27
 
     defaultConfig {
-        applicationId "com.d.androidorm"
-        minSdkVersion 14
+        minSdkVersion 9
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -28,11 +27,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     implementation project(':lib_common')
-    implementation project(':lib_greendao')
-
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation 'com.dsiner.lib:slidelayout:1.0.3'
-    annotationProcessor "com.jakewharton:butterknife-compiler:8.8.1"
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
+    compileOnly 'com.android.support:appcompat-v7:27.1.1'
+    compileOnly "com.google.code.gson:gson:2.7"
+    api 'de.greenrobot:greendao:2.1.0'
 }
