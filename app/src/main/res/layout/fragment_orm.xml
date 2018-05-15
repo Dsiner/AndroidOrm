@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/lib_pub_dimen_tab_height"
+    android:background="@color/lib_pub_color_bg_main">
+
+    <com.d.lib.common.view.TitleLayout
+        android:id="@+id/tl_title"
+        style="@style/lib_pub_title_style"
+        app:lib_pub_tl_middleText="title"
+        app:lib_pub_tl_rightRes="@layout/layout_operate_include" />
+
+    <com.d.lib.common.view.DSLayout
+        android:id="@+id/dsl_ds"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/lib_pub_dimen_title_height" />
+
+    <include
+        layout="@layout/layout_orm_header"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="@dimen/lib_pub_dimen_title_height" />
+
+    <com.d.lib.xrv.XRecyclerView
+        android:id="@+id/xrv_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="90dp" />
+</FrameLayout>
