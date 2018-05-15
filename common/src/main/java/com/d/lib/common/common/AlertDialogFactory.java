@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -37,7 +38,7 @@ public class AlertDialogFactory {
      * 默认LoadingDialog
      */
     public AlertDialog getLoadingDialog(String text) {
-        final AlertDialog dlg = new AlertDialog.Builder(context/*new ContextThemeWrapper(context, R.style.dialog_style)*/).create();
+        final AlertDialog dlg = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.lib_pub_dialog_style)).create();
         if (context instanceof Activity && !((Activity) context).isFinishing()) {
             dlg.show();
         }
@@ -49,7 +50,7 @@ public class AlertDialogFactory {
     }
 
     public AlertDialog getAlertDialog(String title, String content, String btnOkText, String btnCancelText, final OnClickListener btnOkListener, final OnClickListener btnCancelListener) {
-        final AlertDialog dlg = new AlertDialog.Builder(context).create();
+        final AlertDialog dlg = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.lib_pub_dialog_style)).create();
         if (context instanceof Activity && !((Activity) context).isFinishing()) {
             dlg.show();
         }
