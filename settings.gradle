@@ -1,1 +1,3 @@
-include ':app', ':lib_common'
+include ':app',
+        ':lib_common',
+        ':lib_realm'

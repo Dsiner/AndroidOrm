@@ -1,11 +1,12 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
+// Realm setting step 4-2
+apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 27
 
     defaultConfig {
-        applicationId "com.d.androidorm"
-        minSdkVersion 14
+        minSdkVersion 9
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -19,19 +20,18 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    realm {
+        syncEnabled = true
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    api fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     implementation project(':lib_common')
-    implementation project(':lib_realm')
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation 'com.dsiner.lib:slidelayout:1.0.3'
-    annotationProcessor "com.jakewharton:butterknife-compiler:8.8.1"
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
+    compileOnly 'com.android.support:appcompat-v7:27.1.1'
 }
