@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.View;
 
 import com.d.androidorm.R;
-import com.d.lib.common.module.mvp.model.BaseModel;
 import com.d.lib.slidelayout.SlideLayout;
 import com.d.lib.slidelayout.SlideManager;
 import com.d.lib.xrv.adapter.CommonAdapter;
@@ -17,7 +16,7 @@ import java.util.List;
  * OrmAdapter
  * Created by D on 2018/5/14.
  */
-public abstract class OrmAdapter<T extends BaseModel> extends CommonAdapter<T> {
+public abstract class OrmAdapter<T> extends CommonAdapter<T> {
     protected SlideManager slideManager;
     protected OnOperateListener<T> listener;
 
