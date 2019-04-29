@@ -3,12 +3,11 @@ package com.d.androidorm.presenter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.d.androidorm.view.IOrmView;
-import com.d.lib.common.module.loader.AbsPresenter;
-import com.d.lib.common.module.taskscheduler.TaskScheduler;
-import com.d.lib.common.module.taskscheduler.callback.Observer;
-import com.d.lib.common.module.taskscheduler.callback.Task;
-import com.d.lib.common.module.taskscheduler.schedule.Schedulers;
+import com.d.lib.common.component.loader.AbsPresenter;
+import com.d.lib.taskscheduler.TaskScheduler;
+import com.d.lib.taskscheduler.callback.Observer;
+import com.d.lib.taskscheduler.callback.Task;
+import com.d.lib.taskscheduler.schedule.Schedulers;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ import java.util.List;
  * OrmPresenter
  * Created by D on 2018/5/14.
  */
-public abstract class OrmPresenter<T> extends AbsPresenter<T, IOrmView<T>> {
+public abstract class OrmPresenter<T> extends AbsPresenter<T> {
 
     public OrmPresenter(Context context) {
         super(context);

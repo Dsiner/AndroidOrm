@@ -1,6 +1,6 @@
 package com.d.androidorm.view;
 
-import com.d.lib.common.module.loader.IAbsView;
+import com.d.lib.common.component.loader.IAbsView;
 
 /**
  * IOrmView

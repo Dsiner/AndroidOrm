@@ -6,7 +6,7 @@ import com.d.androidorm.R;
 import com.d.androidorm.presenter.OrmPresenter;
 import com.d.androidorm.view.IOrmView;
 import com.d.androidorm.widget.OperateView;
-import com.d.lib.common.module.loader.AbsFragment;
+import com.d.lib.common.component.loader.v4.AbsFragment;
 import com.d.lib.common.utils.ViewHelper;
 import com.d.lib.common.view.TitleLayout;
 
@@ -55,7 +55,7 @@ public abstract class OrmFragment<T> extends AbsFragment<T, OrmPresenter<T>> imp
     @Override
     protected void initList() {
         super.initList();
-        xrvList.setCanRefresh(false);
-        xrvList.setCanLoadMore(false);
+        mXrvList.setCanRefresh(false);
+        mXrvList.setCanLoadMore(false);
     }
 }
