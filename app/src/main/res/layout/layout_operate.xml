@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="@dimen/lib_pub_dimen_title_height"
-    android:background="@color/colorAccent"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
@@ -16,7 +15,7 @@
         android:paddingRight="12dp"
         android:text="C"
         android:textColor="@color/lib_pub_color_white"
-        android:textSize="@dimen/lib_pub_dimen_text_main" />
+        android:textSize="@dimen/lib_pub_dimen_text_small" />
 
     <TextView
         android:id="@+id/tv_op1"
@@ -28,7 +27,7 @@
         android:paddingRight="12dp"
         android:text="R"
         android:textColor="@color/lib_pub_color_white"
-        android:textSize="@dimen/lib_pub_dimen_text_main" />
+        android:textSize="@dimen/lib_pub_dimen_text_small" />
 
     <TextView
         android:id="@+id/tv_op2"
@@ -40,7 +39,7 @@
         android:paddingRight="12dp"
         android:text="U"
         android:textColor="@color/lib_pub_color_white"
-        android:textSize="@dimen/lib_pub_dimen_text_main" />
+        android:textSize="@dimen/lib_pub_dimen_text_small" />
 
     <TextView
         android:id="@+id/tv_op3"
@@ -52,5 +51,5 @@
         android:paddingRight="12dp"
         android:text="D"
         android:textColor="@color/lib_pub_color_white"
-        android:textSize="@dimen/lib_pub_dimen_text_main" />
+        android:textSize="@dimen/lib_pub_dimen_text_small" />
 </LinearLayout>
