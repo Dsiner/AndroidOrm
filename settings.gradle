@@ -5,3 +5,6 @@ include ':app',
         ':lib_ormlite',
         ':lib_realm',
         ':lib_room'
+include ':app',
+        ':lib_common',
+        ':lib_sqlite'
