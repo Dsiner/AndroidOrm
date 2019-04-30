@@ -2,4 +2,5 @@ include ':app',
         ':lib_common',
         ':lib_greendao',
         ':lib_litepal',
-        ':lib_ormlite'
+        ':lib_ormlite',
+        ':lib_realm'
