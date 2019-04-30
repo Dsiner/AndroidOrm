@@ -17,10 +17,52 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        findViewById(R.id.btn_jump).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btn_jump_greendao).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, OrmActivity.class));
+                Intent intent = new Intent(MainActivity.this, OrmActivity.class);
+                intent.putExtra("type", 0);
+                startActivity(intent);
+            }
+        });
+        findViewById(R.id.btn_jump_sqlite).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, OrmActivity.class);
+                intent.putExtra("type", 1);
+                startActivity(intent);
+            }
+        });
+        findViewById(R.id.btn_jump_room).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, OrmActivity.class);
+                intent.putExtra("type", 2);
+                startActivity(intent);
+            }
+        });
+        findViewById(R.id.btn_jump_ormlite).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, OrmActivity.class);
+                intent.putExtra("type", 3);
+                startActivity(intent);
+            }
+        });
+        findViewById(R.id.btn_jump_litepal).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, OrmActivity.class);
+                intent.putExtra("type", 4);
+                startActivity(intent);
+            }
+        });
+        findViewById(R.id.btn_jump_realm).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, OrmActivity.class);
+                intent.putExtra("type", 5);
+                startActivity(intent);
             }
         });
     }

@@ -71,7 +71,7 @@ public class RealmFragment extends OrmFragment<Book> implements IRealmView {
 
     @Override
     protected String getTitle() {
-        return "GreenDao";
+        return "Realm";
     }
 
     @Override

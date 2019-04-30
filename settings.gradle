@@ -4,7 +4,5 @@ include ':app',
         ':lib_litepal',
         ':lib_ormlite',
         ':lib_realm',
-        ':lib_room'
-include ':app',
-        ':lib_common',
+        ':lib_room',
         ':lib_sqlite'
