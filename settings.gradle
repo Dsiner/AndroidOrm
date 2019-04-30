@@ -3,4 +3,5 @@ include ':app',
         ':lib_greendao',
         ':lib_litepal',
         ':lib_ormlite',
-        ':lib_realm'
+        ':lib_realm',
+        ':lib_room'
