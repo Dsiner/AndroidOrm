@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.d.androidorm.R;
 import com.d.androidorm.widget.EditRow;
+import com.d.lib.common.util.ConvertUtils;
 import com.d.lib.orm.sqlite.bean.Book;
 import com.d.lib.xrv.adapter.CommonHolder;
 import com.d.lib.xrv.adapter.MultiItemTypeSupport;
@@ -51,8 +52,8 @@ public class SQLiteAdapter extends OrmAdapter<Book> {
                     public void afterTextChanged(String... s) {
                         item.name = s[1];
                         item.author = s[2];
-                        item.price = Double.valueOf(s[3]);
-                        item.date = Long.valueOf(s[4]);
+                        item.price = ConvertUtils.converDouble(s[3]);
+                        item.date = ConvertUtils.converLong(s[4]);
                     }
                 });
                 break;
