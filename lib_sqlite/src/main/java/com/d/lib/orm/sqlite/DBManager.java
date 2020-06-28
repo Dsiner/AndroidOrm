@@ -6,24 +6,24 @@ import com.d.lib.orm.sqlite.db.AbstractDatabase;
 import com.d.lib.orm.sqlite.operation.OpBook;
 
 /**
- * AppDB
+ * DBManager
  * Created by D on 2017/7/25.
  */
-public class AppDB extends AbstractDatabase {
-    private volatile static AppDB INSTANCE;
+public class DBManager extends AbstractDatabase {
+    private volatile static DBManager INSTANCE;
 
     public final OpBook opBook;
 
-    private AppDB(Context context) {
+    private DBManager(Context context) {
         super(context);
         opBook = new OpBook(bookDao);
     }
 
-    public static AppDB getInstance(Context context) {
+    public static DBManager getInstance(Context context) {
         if (INSTANCE == null) {
-            synchronized (AppDB.class) {
+            synchronized (DBManager.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new AppDB(context);
+                    INSTANCE = new DBManager(context);
                 }
             }
         }

@@ -7,20 +7,16 @@ import com.d.androidorm.presenter.OrmPresenter;
 import com.d.androidorm.view.IOrmView;
 import com.d.androidorm.widget.OperateView;
 import com.d.lib.common.component.loader.v4.AbsFragment;
-import com.d.lib.common.utils.ViewHelper;
+import com.d.lib.common.util.ViewHelper;
 import com.d.lib.common.view.TitleLayout;
-
-import butterknife.BindView;
 
 /**
  * OrmFragment
  * Created by D on 2018/5/15.
  */
 public abstract class OrmFragment<T> extends AbsFragment<T, OrmPresenter<T>> implements IOrmView<T> {
-    @BindView(R.id.tl_title)
-    TitleLayout tlTitle;
-    @BindView(R.id.ov_operate)
-    OperateView ovOperate;
+    TitleLayout tl_title;
+    OperateView v_operate;
 
     protected String mTitle;
 
@@ -43,6 +39,10 @@ public abstract class OrmFragment<T> extends AbsFragment<T, OrmPresenter<T>> imp
     @Override
     protected void bindView(View rootView) {
         super.bindView(rootView);
+        tl_title = ViewHelper.findView(rootView, R.id.tl_title);
+        v_operate = (OperateView) ((View) ViewHelper.findView(tl_title,
+                R.id.llyt_operate_right)).getParent();
+
         ViewHelper.setOnClick(rootView, this, R.id.iv_title_left);
     }
 

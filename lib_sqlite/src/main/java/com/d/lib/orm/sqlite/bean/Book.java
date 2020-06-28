@@ -6,7 +6,7 @@ import com.d.lib.orm.sqlite.annotations.Property;
 /**
  * Entity mapped to table "BOOK".
  */
-@Entity(nameInDb = "BookXX")
+@Entity(nameInDb = "BookTable")
 public class Book {
     public int type;
 
@@ -22,7 +22,7 @@ public class Book {
     @Property(index = 3)
     public Long date;
 
-    @Property(index = 4,nameInDb = "PrXWW")
+    @Property(index = 4, nameInDb = "priceX")
     public Double price;
 
     public Book() {

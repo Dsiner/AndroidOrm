@@ -33,18 +33,19 @@ public abstract class AbstractDao<T, KEY> {
     protected String mKeyName;
 
     static class GsonFormat {
-        private static final Gson gson = new Gson();
+        private static class Singleton {
+            private static final Gson gson = new Gson();
+        }
 
         static <T> T fromMap(LinkedHashMap<String, Object> map, Type type) {
-            return gson.fromJson(gson.toJson(map), type);
+            return Singleton.gson.fromJson(Singleton.gson.toJson(map), type);
         }
 
         static <T> LinkedHashMap<String, Object> toHashMap(T entity) {
-            Gson gson = new Gson();
-            String json = gson.toJson(entity);
+            String json = Singleton.gson.toJson(entity);
             Type type = new TypeToken<LinkedHashMap<String, String>>() {
             }.getType();
-            return gson.fromJson(json, type);
+            return Singleton.gson.fromJson(json, type);
         }
     }
 
@@ -273,6 +274,49 @@ public abstract class AbstractDao<T, KEY> {
         });
     }
 
+    public void delete(final List<T> list) {
+        if (list == null || list.size() <= 0 || TextUtils.isEmpty(getKeyName())) {
+            return;
+        }
+        executeInTx(new Callback() {
+            @Override
+            public Cursor execute(SQLiteDatabase db) {
+                String whereClause = getKeyName() + " = ?";
+                for (T entity : list) {
+                    KEY key = getKey(entity);
+                    if (key == null) {
+                        continue;
+                    }
+                    String[] whereArgs = new String[]{String.valueOf(key)};
+                    db.delete(getTableName(), whereClause, whereArgs);
+                }
+                return null;
+            }
+        });
+    }
+
+    @Deprecated
+    public void deleteInTx(final List<T> list) {
+        if (list == null || list.size() <= 0 || TextUtils.isEmpty(getKeyName())) {
+            return;
+        }
+        executeInTx(new Callback() {
+            @Override
+            public Cursor execute(SQLiteDatabase db) {
+                StringBuilder args = new StringBuilder("(");
+                for (T entity : list) {
+                    args.append(getKey(entity) + ",");
+                }
+                int index = args.lastIndexOf(",");
+                args.replace(index, index + 1, ")");
+                db.rawQuery("delete from " + getTableName()
+                        + " where " + getKeyName() + " in "
+                        + args.toString(), null);
+                return null;
+            }
+        });
+    }
+
     public void deleteAll() {
         executeInTx(new Callback() {
             @Override
@@ -317,7 +361,42 @@ public abstract class AbstractDao<T, KEY> {
         return (T) entity[0];
     }
 
-    public List<T> loadAll() {
+    @NonNull
+    public List<T> queryLimit(final int limit) {
+        final List<T> list = new ArrayList<>();
+        executeInTx(new Callback() {
+            @Override
+            public Cursor execute(SQLiteDatabase db) {
+                Cursor cursor = db.rawQuery("select * from " + getTableName()
+                        + " limit " + limit, null);
+                while (cursor.moveToNext()) {
+                    list.add(readEntity(cursor));
+                }
+                return cursor;
+            }
+        });
+        return list;
+    }
+
+    @NonNull
+    public List<T> queryOffset(final int beginIndex, final int endIndex) {
+        final List<T> list = new ArrayList<>();
+        executeInTx(new Callback() {
+            @Override
+            public Cursor execute(SQLiteDatabase db) {
+                Cursor cursor = db.rawQuery("select * from " + getTableName()
+                        + " limit " + beginIndex + "," + endIndex, null);
+                while (cursor.moveToNext()) {
+                    list.add(readEntity(cursor));
+                }
+                return cursor;
+            }
+        });
+        return list;
+    }
+
+    @NonNull
+    public List<T> queryAll() {
         final List<T> list = new ArrayList<>();
         executeInTx(new Callback() {
             @Override

@@ -9,7 +9,7 @@ import com.d.androidorm.view.ISQLiteView;
 import com.d.androidorm.widget.EditRow;
 import com.d.androidorm.widget.OperateView;
 import com.d.lib.common.component.mvp.MvpView;
-import com.d.lib.common.utils.keyboard.KeyboardHelper;
+import com.d.lib.common.util.keyboard.KeyboardHelper;
 import com.d.lib.orm.sqlite.bean.Book;
 import com.d.lib.xrv.adapter.CommonAdapter;
 import com.d.lib.xrv.adapter.MultiItemTypeSupport;
@@ -47,7 +47,7 @@ public class SQLiteFragment extends OrmFragment<Book> implements ISQLiteView {
             public void update(Book item) {
                 item.type = 1;
                 adapter.notifyDataSetChanged();
-                ovOperate.setState(OperateView.STATE_UPDATING);
+                v_operate.setState(OperateView.STATE_UPDATING);
             }
 
             @Override
@@ -76,8 +76,8 @@ public class SQLiteFragment extends OrmFragment<Book> implements ISQLiteView {
     @Override
     protected void init() {
         super.init();
-        tlTitle.setText(R.id.tv_title_title, mTitle);
-        ovOperate.setOnCallback(new OperateView.OnCallback() {
+        tl_title.setText(R.id.tv_title_title, mTitle);
+        v_operate.setOnCallback(new OperateView.OnCallback() {
             @Override
             public void add() {
                 Book book = new Book(null, "", "", 0L, 0D);
@@ -86,7 +86,7 @@ public class SQLiteFragment extends OrmFragment<Book> implements ISQLiteView {
                 datas.addAll(mCommonLoader.getDatas());
                 datas.add(book);
                 mCommonLoader.setData(datas);
-                ovOperate.setState(OperateView.STATE_INSERTING);
+                v_operate.setState(OperateView.STATE_INSERTING);
                 mXrvList.scrollToPosition(mCommonLoader.getDatas().size());
             }
 
@@ -121,8 +121,8 @@ public class SQLiteFragment extends OrmFragment<Book> implements ISQLiteView {
     @Override
     public void setData(List<Book> datas) {
         super.setData(datas);
-        tlTitle.setText(R.id.tv_title_title, mTitle + (datas.size() > 0 ? "(" + datas.size() + ")" : ""));
-        ovOperate.setState(OperateView.STATE_DONE);
+        tl_title.setText(R.id.tv_title_title, mTitle + (datas.size() > 0 ? "(" + datas.size() + ")" : ""));
+        v_operate.setState(OperateView.STATE_DONE);
         KeyboardHelper.hideKeyboard(mRootView);
     }
 }

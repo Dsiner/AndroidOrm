@@ -4,7 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.d.lib.common.data.preference.Preferences;
-import com.d.lib.orm.sqlite.AppDB;
+import com.d.lib.orm.sqlite.DBManager;
 import com.d.lib.orm.sqlite.bean.Book;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class App extends Application {
                 Book book = new Book((long) i, "N" + i, "A" + i, 0L, 0D);
                 list.add(book);
             }
-            AppDB.getInstance(appContext).opBook.insert(list);
+            DBManager.getInstance(appContext).opBook.insert(list);
         }
     }
 }

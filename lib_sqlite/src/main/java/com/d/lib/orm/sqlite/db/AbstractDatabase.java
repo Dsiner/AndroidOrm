@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.d.lib.orm.sqlite.bean.Book;
+import com.d.lib.orm.sqlite.dao.AbstractDao;
 import com.d.lib.orm.sqlite.dao.BookDao;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -32,12 +33,12 @@ public abstract class AbstractDatabase extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        BookDao.createTable(db, Book.class, true);
+        AbstractDao.createTable(db, Book.class, true);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        BookDao.dropTable(db, Book.class, true);
+        AbstractDao.dropTable(db, Book.class, true);
         onCreate(db);
     }
 

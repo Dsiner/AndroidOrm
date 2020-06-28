@@ -1,20 +1,27 @@
 package com.d.lib.orm.sqlite.operation;
 
+import android.support.annotation.NonNull;
+
 import com.d.lib.orm.sqlite.dao.AbstractDao;
 
 import java.util.List;
 
 /**
- * AbstractOp
  * Created by D on 2017/11/8.
  */
-public class AbstractOp<T> {
+public class AbstractOp<D extends AbstractDao, T> {
+    @NonNull
+    protected D dao;
+
+    public AbstractOp(@NonNull D dao) {
+        this.dao = dao;
+    }
 
     /**
      * Insert a record
      */
-    protected void insert(AbstractDao dao, T entity) {
-        if (dao == null || entity == null) {
+    public void insert(T entity) {
+        if (entity == null) {
             return;
         }
         dao.insert(entity);
@@ -23,43 +30,43 @@ public class AbstractOp<T> {
     /**
      * Insert a record
      */
-    protected void insertOrReplace(AbstractDao dao, T entity) {
-        if (dao == null || entity == null) {
+    public void insertOrReplace(T entity) {
+        if (entity == null) {
             return;
         }
         dao.insertOrReplace(entity);
     }
 
-    /**
-     * @param dao:         Dao
-     * @param transaction: true: transaction
-     */
-    protected void insert(final AbstractDao dao, final List<T> list, boolean transaction) {
-        if (dao == null || list == null || list.size() <= 0) {
+    public void insert(final List<T> list) {
+        insert(list, true);
+    }
+
+    public void insert(final List<T> list, boolean transaction) {
+        if (list == null || list.size() <= 0) {
             return;
         }
         final int size = list.size();
         if (!transaction) {
             for (int i = 0; i < size; i++) {
-                insert(dao, list.get(i));
+                insert(list.get(i));
             }
             return;
         }
         dao.insertInTx(list);
     }
 
-    /**
-     * @param dao:         Dao
-     * @param transaction: true: transaction
-     */
-    protected void insertOrReplace(final AbstractDao dao, final List<T> list, boolean transaction) {
-        if (dao == null || list == null || list.size() <= 0) {
+    public void insertOrReplace(final List<T> list) {
+        insertOrReplace(list, true);
+    }
+
+    public void insertOrReplace(final List<T> list, boolean transaction) {
+        if (list == null || list.size() <= 0) {
             return;
         }
         final int size = list.size();
         if (!transaction) {
             for (int i = 0; i < size; i++) {
-                insertOrReplace(dao, list.get(i));
+                insertOrReplace(list.get(i));
             }
             return;
         }
@@ -67,13 +74,13 @@ public class AbstractOp<T> {
     }
 
     /**
-     * Delete all records in the table
+     * Delete a record in the table-according to the primary key
      */
-    protected void deleteAll(AbstractDao dao) {
-        if (dao == null) {
+    public void delete(T entity) {
+        if (entity == null) {
             return;
         }
-        dao.deleteAll();
+        dao.delete(entity);
     }
 
     /**
@@ -81,28 +88,36 @@ public class AbstractOp<T> {
      *
      * @param key: Primary key
      */
-    protected void deleteById(AbstractDao dao, Long key) {
-        if (dao == null) {
-            return;
-        }
+    public void deleteById(Long key) {
         dao.deleteByKey(key);
     }
 
-    /**
-     * Delete a record in the table-according to the primary key
-     */
-    protected void delete(AbstractDao dao, T entity) {
-        if (dao == null || entity == null) {
-            return;
-        }
-        dao.delete(entity);
+    public void delete(List<T> list) {
+        dao.delete(list);
     }
 
-    protected void update(AbstractDao dao, T entity) {
-        if (dao == null || entity == null) {
+    /**
+     * Delete all records in the table
+     */
+    public void deleteAll() {
+        dao.deleteAll();
+    }
+
+    public void update(T entity) {
+        if (entity == null) {
             return;
         }
         dao.update(entity);
+    }
+
+    @NonNull
+    public List<T> queryLimit(int limit) {
+        return dao.queryLimit(limit);
+    }
+
+    @NonNull
+    public List<T> queryOffset(final int beginIndex, final int endIndex) {
+        return dao.queryOffset(beginIndex, endIndex);
     }
 
     /**
@@ -110,10 +125,8 @@ public class AbstractOp<T> {
      *
      * @return Query result set
      */
-    protected List<T> queryAll(AbstractDao dao) {
-        if (dao == null) {
-            return null;
-        }
-        return dao.loadAll();
+    @NonNull
+    public List<T> queryAll() {
+        return dao.queryAll();
     }
 }

@@ -9,6 +9,7 @@
     <com.d.lib.common.view.TitleLayout
         android:id="@+id/tl_title"
         style="@style/lib_pub_title_style"
+        app:lib_pub_tl_leftDrawable="@drawable/lib_pub_ic_title_back"
         app:lib_pub_tl_middleText="title"
         app:lib_pub_tl_rightRes="@layout/layout_operate_include" />
 
