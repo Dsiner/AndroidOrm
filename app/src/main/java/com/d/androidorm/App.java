@@ -4,8 +4,8 @@ import android.app.Application;
 import android.content.Context;
 
 import com.d.lib.common.data.preference.Preferences;
-import com.d.lib.orm.sqlite.bean.Book;
 import com.d.lib.orm.sqlite.AppDB;
+import com.d.lib.orm.sqlite.bean.Book;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,15 +19,15 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        initSqlite(getApplicationContext());
+        initSQLite(getApplicationContext());
     }
 
-    private void initSqlite(Context appContext) {
+    private void initSQLite(Context appContext) {
         if (Preferences.getIns(appContext).getIsFirst()) {
             Preferences.getIns(appContext).putIsFirst(false);
             List<Book> list = new ArrayList<>();
             for (int i = 0; i < 66; i++) {
-                Book book = new Book((long) i, "N" + 1, "A" + i, 0L, 0D);
+                Book book = new Book((long) i, "N" + i, "A" + i, 0L, 0D);
                 list.add(book);
             }
             AppDB.getInstance(appContext).opBook.insert(list);
