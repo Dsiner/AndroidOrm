@@ -11,13 +11,13 @@ import com.d.lib.xrv.adapter.MultiItemTypeSupport;
 import java.util.List;
 
 /**
- * GreenDaoAdapter
+ * SQLiteAdapter
  * Created by D on 2018/5/17.
  */
-public class qliteAdapter extends OrmAdapter<Book> {
+public class SQLiteAdapter extends OrmAdapter<Book> {
     private EditRow etrRow;
 
-    public qliteAdapter(Context context, List<Book> datas, MultiItemTypeSupport<Book> multiItemTypeSupport) {
+    public SQLiteAdapter(Context context, List<Book> datas, MultiItemTypeSupport<Book> multiItemTypeSupport) {
         super(context, datas, multiItemTypeSupport);
     }
 

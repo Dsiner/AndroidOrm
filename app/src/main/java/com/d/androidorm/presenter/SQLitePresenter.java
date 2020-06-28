@@ -8,12 +8,12 @@ import com.d.lib.orm.sqlite.AppDB;
 import java.util.List;
 
 /**
- * GreenDaoPresenter
+ * SQLitePresenter
  * Created by D on 2018/5/14.
  */
-public class qlitePresenter extends OrmPresenter<Book> {
+public class SQLitePresenter extends OrmPresenter<Book> {
 
-    public qlitePresenter(Context context) {
+    public SQLitePresenter(Context context) {
         super(context);
     }
 
