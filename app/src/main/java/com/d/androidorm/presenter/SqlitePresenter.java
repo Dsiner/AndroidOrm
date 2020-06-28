@@ -3,7 +3,7 @@ package com.d.androidorm.presenter;
 import android.content.Context;
 
 import com.d.lib.orm.sqlite.bean.Book;
-import com.d.lib.orm.sqlite.utils.AppDBUtil;
+import com.d.lib.orm.sqlite.AppDB;
 
 import java.util.List;
 
@@ -19,21 +19,21 @@ public class SqlitePresenter extends OrmPresenter<Book> {
 
     @Override
     protected void insertDB(Book bean) {
-        AppDBUtil.getInstance(mContext).optBook().insert(bean);
+        AppDB.getInstance(mContext).opBook.insert(bean);
     }
 
     @Override
     protected void deleteDB(Book bean) {
-        AppDBUtil.getInstance(mContext).optBook().delete(bean);
+        AppDB.getInstance(mContext).opBook.delete(bean);
     }
 
     @Override
     protected void updateDB(Book bean) {
-        AppDBUtil.getInstance(mContext).optBook().update(bean);
+        AppDB.getInstance(mContext).opBook.update(bean);
     }
 
     @Override
     protected List<Book> queryAllDB() {
-        return AppDBUtil.getInstance(mContext).optBook().queryAll();
+        return AppDB.getInstance(mContext).opBook.queryAll();
     }
 }

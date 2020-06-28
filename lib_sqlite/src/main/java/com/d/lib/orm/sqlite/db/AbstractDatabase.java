@@ -11,24 +11,21 @@ import com.google.gson.GsonBuilder;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * AppDB
+ * AbstractDatabase
  * Created by D on 2017/7/25.
  */
-public abstract class AppDB extends SQLiteOpenHelper {
+public abstract class AbstractDatabase extends SQLiteOpenHelper {
     private AtomicInteger mOpenCounter = new AtomicInteger();
-    private SQLiteDatabase db;
-    protected Gson gson;
+    private SQLiteDatabase mDatabase;
+    protected Gson mGson;
 
-    protected BookDao bookDao;
+    protected final BookDao bookDao;
 
-    public AppDB(Context context) {
+    public AbstractDatabase(Context context) {
         super(context, "sqlite.db", null, 1);
-        gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        db = getWritableDatabase();
-        initDaos();
-    }
+        mGson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        mDatabase = getWritableDatabase();
 
-    private void initDaos() {
         bookDao = new BookDao(this);
     }
 
@@ -46,15 +43,15 @@ public abstract class AppDB extends SQLiteOpenHelper {
     public synchronized SQLiteDatabase open() {
         if (mOpenCounter.incrementAndGet() == 1) {
             // Opening new database
-            db = getWritableDatabase();
+            mDatabase = getWritableDatabase();
         }
-        return db;
+        return mDatabase;
     }
 
     public synchronized void close() {
         if (mOpenCounter.decrementAndGet() == 0) {
             // Closing database
-            db.close();
+            mDatabase.close();
         }
     }
 }

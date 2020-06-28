@@ -4,35 +4,35 @@ import com.d.lib.orm.sqlite.dao.AbstractDao;
 
 import java.util.List;
 
-
 /**
- * 抽象基本操作
+ * AbstractOp
  * Created by D on 2017/11/8.
  */
 public class AbstractOp<T> {
+
     /**
-     * 插入一条记录
+     * Insert a record
      */
-    protected void insert(AbstractDao dao, T o) {
-        if (dao == null || o == null) {
+    protected void insert(AbstractDao dao, T entity) {
+        if (dao == null || entity == null) {
             return;
         }
-        dao.insert(o);
+        dao.insert(entity);
     }
 
     /**
-     * 插入一条记录
+     * Insert a record
      */
-    protected void insertOrReplace(AbstractDao dao, T o) {
-        if (dao == null || o == null) {
+    protected void insertOrReplace(AbstractDao dao, T entity) {
+        if (dao == null || entity == null) {
             return;
         }
-        dao.insertOrReplace(o);
+        dao.insertOrReplace(entity);
     }
 
     /**
-     * @param dao:dao
-     * @param transaction:true-开启一次事务
+     * @param dao:         Dao
+     * @param transaction: true: transaction
      */
     protected void insert(final AbstractDao dao, final List<T> list, boolean transaction) {
         if (dao == null || list == null || list.size() <= 0) {
@@ -49,8 +49,8 @@ public class AbstractOp<T> {
     }
 
     /**
-     * @param dao:dao
-     * @param transaction:true-开启一次事务
+     * @param dao:         Dao
+     * @param transaction: true: transaction
      */
     protected void insertOrReplace(final AbstractDao dao, final List<T> list, boolean transaction) {
         if (dao == null || list == null || list.size() <= 0) {
@@ -67,7 +67,7 @@ public class AbstractOp<T> {
     }
 
     /**
-     * 删除表中所有记录
+     * Delete all records in the table
      */
     protected void deleteAll(AbstractDao dao) {
         if (dao == null) {
@@ -77,38 +77,38 @@ public class AbstractOp<T> {
     }
 
     /**
-     * 删除表中一条记录
+     * Delete a record in the table
      *
-     * @param id:主键
+     * @param key: Primary key
      */
-    protected void deleteById(AbstractDao dao, Long id) {
+    protected void deleteById(AbstractDao dao, Long key) {
         if (dao == null) {
             return;
         }
-        dao.deleteByKey(id);
+        dao.deleteByKey(key);
     }
 
     /**
-     * 删除表中一条记录 -根据主键
+     * Delete a record in the table-according to the primary key
      */
-    protected void delete(AbstractDao dao, T o) {
-        if (dao == null || o == null) {
+    protected void delete(AbstractDao dao, T entity) {
+        if (dao == null || entity == null) {
             return;
         }
-        dao.delete(o);
+        dao.delete(entity);
     }
 
-    protected void update(AbstractDao dao, T o) {
-        if (dao == null || o == null) {
+    protected void update(AbstractDao dao, T entity) {
+        if (dao == null || entity == null) {
             return;
         }
-        dao.update(o);
+        dao.update(entity);
     }
 
     /**
-     * 查询表，默认条件：主键id递增
+     * Query table, default condition: primary key id is increasing
      *
-     * @return List<D>：查询结果集
+     * @return Query result set
      */
     protected List<T> queryAll(AbstractDao dao) {
         if (dao == null) {

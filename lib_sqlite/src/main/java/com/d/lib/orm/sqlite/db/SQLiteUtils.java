@@ -4,7 +4,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
-public class SQLUtil {
+public class SQLiteUtils {
+
     public static synchronized Cursor findBySQL(SQLiteDatabase db, String... sql) {
         checkConditionsCorrect(sql);
         if (db == null || sql == null) {
