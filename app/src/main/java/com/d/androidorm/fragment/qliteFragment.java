@@ -2,10 +2,10 @@ package com.d.androidorm.fragment;
 
 import com.d.androidorm.R;
 import com.d.androidorm.adapter.OrmAdapter;
-import com.d.androidorm.adapter.SqliteAdapter;
+import com.d.androidorm.adapter.qliteAdapter;
 import com.d.androidorm.presenter.OrmPresenter;
-import com.d.androidorm.presenter.SqlitePresenter;
-import com.d.androidorm.view.ISqliteView;
+import com.d.androidorm.presenter.qlitePresenter;
+import com.d.androidorm.view.IqliteView;
 import com.d.androidorm.widget.EditRow;
 import com.d.androidorm.widget.OperateView;
 import com.d.lib.common.component.mvp.MvpView;
@@ -21,11 +21,11 @@ import java.util.List;
  * GreenDaoFragment
  * Created by D on 2018/5/15.
  */
-public class SqliteFragment extends OrmFragment<Book> implements ISqliteView {
+public class qliteFragment extends OrmFragment<Book> implements IqliteView {
 
     @Override
     protected CommonAdapter<Book> getAdapter() {
-        final SqliteAdapter adapter = new SqliteAdapter(mContext, new ArrayList<Book>(), new MultiItemTypeSupport<Book>() {
+        final qliteAdapter adapter = new qliteAdapter(mContext, new ArrayList<Book>(), new MultiItemTypeSupport<Book>() {
             @Override
             public int getLayoutId(int viewType) {
                 switch (viewType) {
@@ -60,7 +60,7 @@ public class SqliteFragment extends OrmFragment<Book> implements ISqliteView {
 
     @Override
     public OrmPresenter<Book> getPresenter() {
-        return new SqlitePresenter(getActivity().getApplicationContext());
+        return new qlitePresenter(getActivity().getApplicationContext());
     }
 
     @Override
@@ -92,7 +92,7 @@ public class SqliteFragment extends OrmFragment<Book> implements ISqliteView {
 
             @Override
             public void insert() {
-                SqliteAdapter sqliteAdapter = (SqliteAdapter) mAdapter;
+                qliteAdapter sqliteAdapter = (qliteAdapter) mAdapter;
                 EditRow etrRow = sqliteAdapter.getEtrRow();
                 Book book = (Book) etrRow.getTag();
                 mPresenter.insert(book);
@@ -100,7 +100,7 @@ public class SqliteFragment extends OrmFragment<Book> implements ISqliteView {
 
             @Override
             public void update() {
-                SqliteAdapter sqliteAdapter = (SqliteAdapter) mAdapter;
+                qliteAdapter sqliteAdapter = (qliteAdapter) mAdapter;
                 EditRow etrRow = sqliteAdapter.getEtrRow();
                 Book book = (Book) etrRow.getTag();
                 mPresenter.update(book);

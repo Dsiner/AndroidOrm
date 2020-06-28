@@ -14,10 +14,10 @@ import java.util.List;
  * GreenDaoAdapter
  * Created by D on 2018/5/17.
  */
-public class SqliteAdapter extends OrmAdapter<Book> {
+public class qliteAdapter extends OrmAdapter<Book> {
     private EditRow etrRow;
 
-    public SqliteAdapter(Context context, List<Book> datas, MultiItemTypeSupport<Book> multiItemTypeSupport) {
+    public qliteAdapter(Context context, List<Book> datas, MultiItemTypeSupport<Book> multiItemTypeSupport) {
         super(context, datas, multiItemTypeSupport);
     }
 

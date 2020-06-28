@@ -11,9 +11,9 @@ import java.util.List;
  * GreenDaoPresenter
  * Created by D on 2018/5/14.
  */
-public class SqlitePresenter extends OrmPresenter<Book> {
+public class qlitePresenter extends OrmPresenter<Book> {
 
-    public SqlitePresenter(Context context) {
+    public qlitePresenter(Context context) {
         super(context);
     }
 
