@@ -1,4 +1,4 @@
-package com.d.lib.orm.sqlite.property;
+package com.d.lib.orm.sqlite.internal;
 
 import android.support.annotation.StringDef;
 

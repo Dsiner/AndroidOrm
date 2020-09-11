@@ -30,7 +30,7 @@ public class App extends Application {
                 Book book = new Book((long) i, "N" + i, "A" + i, 0L, 0D);
                 list.add(book);
             }
-            DBManager.getInstance(appContext).opBook.insert(list);
+            DBManager.getInstance(appContext).opBook.insert(list, true);
         }
     }
 }

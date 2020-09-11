@@ -2,7 +2,7 @@ package com.d.lib.orm.sqlite.operation;
 
 import android.support.annotation.NonNull;
 
-import com.d.lib.orm.sqlite.dao.AbstractDao;
+import com.d.lib.orm.sqlite.db.AbstractDao;
 
 import java.util.List;
 
@@ -37,10 +37,6 @@ public class AbstractOp<D extends AbstractDao, T> {
         dao.insertOrReplace(entity);
     }
 
-    public void insert(final List<T> list) {
-        insert(list, true);
-    }
-
     public void insert(final List<T> list, boolean transaction) {
         if (list == null || list.size() <= 0) {
             return;
@@ -55,11 +51,7 @@ public class AbstractOp<D extends AbstractDao, T> {
         dao.insertInTx(list);
     }
 
-    public void insertOrReplace(final List<T> list) {
-        insertOrReplace(list, true);
-    }
-
-    public void insertOrReplace(final List<T> list, boolean transaction) {
+    protected void insertOrReplace(final List<T> list, boolean transaction) {
         if (list == null || list.size() <= 0) {
             return;
         }
@@ -128,5 +120,9 @@ public class AbstractOp<D extends AbstractDao, T> {
     @NonNull
     public List<T> queryAll() {
         return dao.queryAll();
+    }
+
+    public long queryCount() {
+        return dao.queryCount();
     }
 }

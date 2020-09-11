@@ -43,6 +43,11 @@ public @interface Property {
     boolean notNull() default false;
 
     /**
+     * Specifies that property is null
+     */
+    boolean nullable() default false;
+
+    /**
      * Transient fields are not persisted in the database.
      */
     boolean columnTransient() default false;

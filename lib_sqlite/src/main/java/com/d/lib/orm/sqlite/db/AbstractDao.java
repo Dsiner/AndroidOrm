@@ -1,6 +1,5 @@
-package com.d.lib.orm.sqlite.dao;
+package com.d.lib.orm.sqlite.db;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
@@ -11,17 +10,15 @@ import android.util.Log;
 
 import com.d.lib.orm.sqlite.annotations.Entity;
 import com.d.lib.orm.sqlite.annotations.Property;
-import com.d.lib.orm.sqlite.db.AbstractDatabase;
-import com.d.lib.orm.sqlite.property.ColumnType;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.d.lib.orm.sqlite.internal.ColumnType;
+import com.d.lib.orm.sqlite.internal.DaoHelper;
+import com.d.lib.orm.sqlite.internal.SqlUtils;
+import com.d.lib.orm.sqlite.internal.TableStatements;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,97 +29,6 @@ public abstract class AbstractDao<T, KEY> {
     protected final LinkedHashMap<String, String> mColumnNames = new LinkedHashMap<>();
     protected String mKeyName;
 
-    static class GsonFormat {
-        private static class Singleton {
-            private static final Gson gson = new Gson();
-        }
-
-        static <T> T fromMap(LinkedHashMap<String, Object> map, Type type) {
-            return Singleton.gson.fromJson(Singleton.gson.toJson(map), type);
-        }
-
-        static <T> LinkedHashMap<String, Object> toHashMap(T entity) {
-            String json = Singleton.gson.toJson(entity);
-            Type type = new TypeToken<LinkedHashMap<String, String>>() {
-            }.getType();
-            return Singleton.gson.fromJson(json, type);
-        }
-    }
-
-    /**
-     * Creates the underlying database table.
-     */
-    public static void createTable(SQLiteDatabase db, Class clz, boolean ifNotExists) {
-        if (!clz.isAnnotationPresent(Entity.class)) {
-            throw new IllegalArgumentException("Undefined table name.");
-        }
-        String constraint = ifNotExists ? " IF NOT EXISTS " : "";
-        Entity entity = (Entity) clz.getAnnotation(Entity.class);
-        String tableName = !TextUtils.isEmpty(entity.nameInDb()) ?
-                entity.nameInDb() : clz.getSimpleName();
-        StringBuilder sql = new StringBuilder("CREATE TABLE" + constraint + tableName + " (");
-
-        List<Field> fields = getPropertyFields(clz);
-        if (fields.size() <= 0) {
-            throw new IllegalArgumentException("No table fields are defined in the "
-                    + tableName + " table.");
-        }
-        for (Field field : fields) {
-            Property property = (Property) field.getAnnotation(Property.class);
-            String columnName = !TextUtils.isEmpty(property.nameInDb()) ?
-                    property.nameInDb() : field.getName();
-            Class type = property.columnType() != void.class ?
-                    property.columnType() : field.getType();
-            sql.append(columnName
-                    + " " + ColumnType.getColumnType(type)
-                    + (property.id() ? " PRIMARY KEY" : "")
-                    + (property.autoincrement() ? " AUTOINCREMENT" : "")
-                    + (property.notNull() ? " NOT NULL" : "")
-                    + (property.unique() ? " UNIQUE" : "")
-                    + ",");
-        }
-        int index = sql.lastIndexOf(",");
-        sql.replace(index, index + 1, ");");
-        db.execSQL(sql.toString());
-        Log.d("sql", sql.toString());
-    }
-
-    /**
-     * Drops the underlying database table.
-     */
-    public static void dropTable(SQLiteDatabase db, Class clz, boolean ifExists) {
-        if (!clz.isAnnotationPresent(Entity.class)) {
-            throw new IllegalArgumentException("Undefined table name.");
-        }
-        Entity entity = (Entity) clz.getAnnotation(Entity.class);
-        String tableName = !TextUtils.isEmpty(entity.nameInDb()) ?
-                entity.nameInDb() : clz.getSimpleName();
-        String sql = "DROP TABLE " + (ifExists ? "IF EXISTS " : "") + "\"" + tableName + "\"";
-        db.execSQL(sql);
-    }
-
-    @NonNull
-    private static List<Field> getPropertyFields(Class clz) {
-        List<Field> fields = new ArrayList<>();
-        Field[] fieldArray = clz.getDeclaredFields();
-        if (fieldArray != null) {
-            for (Field field : fieldArray) {
-                if (field.isAnnotationPresent(Property.class)) {
-                    fields.add(field);
-                }
-            }
-        }
-        Collections.sort(fields, new Comparator<Field>() {
-            @Override
-            public int compare(Field o1, Field o2) {
-                int index1 = ((Property) o1.getAnnotation(Property.class)).index();
-                int index2 = ((Property) o2.getAnnotation(Property.class)).index();
-                return (index1 < index2) ? -1 : ((index1 == index2) ? 0 : 1);
-            }
-        });
-        return fields;
-    }
-
     public AbstractDao(AbstractDatabase database) {
         this.mDatabase = database;
         Class clz = (Class) ((ParameterizedType) getClass()
@@ -132,7 +38,7 @@ public abstract class AbstractDao<T, KEY> {
         mTableName = !TextUtils.isEmpty(entity.nameInDb()) ?
                 entity.nameInDb() : clz.getSimpleName();
 
-        List<Field> fields = getPropertyFields(clz);
+        List<Field> fields = DaoHelper.getPropertyFields(clz);
         for (Field field : fields) {
             Property property = (Property) field.getAnnotation(Property.class);
             String columnName = !TextUtils.isEmpty(property.nameInDb()) ?
@@ -153,7 +59,7 @@ public abstract class AbstractDao<T, KEY> {
     }
 
     public KEY getKey(T entity) {
-        LinkedHashMap<String, Object> map = GsonFormat.toHashMap(entity);
+        LinkedHashMap<String, Object> map = DaoHelper.GsonFormat.toHashMap(entity);
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             if (TextUtils.equals(mKeyName, entry.getKey())) {
                 return (KEY) entry.getValue();
@@ -166,9 +72,9 @@ public abstract class AbstractDao<T, KEY> {
         return getKey(entity) != null;
     }
 
-    protected ContentValues getContentValues(T entity) {
-        ContentValues values = new ContentValues();
-        LinkedHashMap<String, Object> map = GsonFormat.toHashMap(entity);
+    protected TableStatements getTableStatement(T entity) {
+        TableStatements statement = new TableStatements();
+        LinkedHashMap<String, Object> map = DaoHelper.GsonFormat.toHashMap(entity);
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             String columnName = mColumnNames.get(entry.getKey());
             if (TextUtils.isEmpty(columnName)) {
@@ -177,14 +83,14 @@ public abstract class AbstractDao<T, KEY> {
             Object value = entry.getValue();
             String columnType = ColumnType.getColumnType(value.getClass());
             if (TextUtils.equals(ColumnType.INTEGER, columnType)) {
-                values.put(columnName, (long) value);
+                statement.put(columnName, value);
             } else if (TextUtils.equals(ColumnType.REAL, columnType)) {
-                values.put(columnName, (double) value);
+                statement.put(columnName, value);
             } else if (TextUtils.equals(ColumnType.TEXT, columnType)) {
-                values.put(columnName, (String) value);
+                statement.put(columnName, value);
             }
         }
-        return values;
+        return statement;
     }
 
     protected T readEntity(Cursor cursor) {
@@ -198,15 +104,16 @@ public abstract class AbstractDao<T, KEY> {
         Type type = ((ParameterizedType) getClass()
                 .getGenericSuperclass())
                 .getActualTypeArguments()[0];
-        return GsonFormat.fromMap(map, type);
+        return DaoHelper.GsonFormat.fromMap(map, type);
     }
 
     public void insert(final T entity) {
         executeInTx(new Callback() {
             @Override
             public Cursor execute(SQLiteDatabase db) {
-                ContentValues values = getContentValues(entity);
-                db.insertOrThrow(getTableName(), null, values);
+                TableStatements statement = getTableStatement(entity);
+                String sql = SqlUtils.createSqlInsert(getTableName(), statement.getColumns());
+                db.execSQL(sql, statement.getBindArgs());
                 return null;
             }
         });
@@ -231,8 +138,9 @@ public abstract class AbstractDao<T, KEY> {
             @Override
             public Cursor execute(SQLiteDatabase db) {
                 for (T entity : list) {
-                    ContentValues values = getContentValues(entity);
-                    db.insertOrThrow(getTableName(), null, values);
+                    TableStatements statement = getTableStatement(entity);
+                    String sql = SqlUtils.createSqlInsert(getTableName(), statement.getColumns());
+                    db.execSQL(sql, statement.getBindArgs());
                 }
                 return null;
             }
@@ -266,9 +174,9 @@ public abstract class AbstractDao<T, KEY> {
         executeInTx(new Callback() {
             @Override
             public Cursor execute(SQLiteDatabase db) {
-                String whereClause = getKeyName() + " = ?";
-                String[] whereArgs = new String[]{String.valueOf(key)};
-                db.delete(getTableName(), whereClause, whereArgs);
+                String sql = SqlUtils.createSqlDelete(getTableName(),
+                        new String[]{getKeyName()});
+                db.execSQL(sql, new Object[]{key});
                 return null;
             }
         });
@@ -281,14 +189,14 @@ public abstract class AbstractDao<T, KEY> {
         executeInTx(new Callback() {
             @Override
             public Cursor execute(SQLiteDatabase db) {
-                String whereClause = getKeyName() + " = ?";
                 for (T entity : list) {
                     KEY key = getKey(entity);
                     if (key == null) {
                         continue;
                     }
-                    String[] whereArgs = new String[]{String.valueOf(key)};
-                    db.delete(getTableName(), whereClause, whereArgs);
+                    String sql = SqlUtils.createSqlDelete(getTableName(),
+                            new String[]{getKeyName()});
+                    db.execSQL(sql, new Object[]{key});
                 }
                 return null;
             }
@@ -305,12 +213,12 @@ public abstract class AbstractDao<T, KEY> {
             public Cursor execute(SQLiteDatabase db) {
                 StringBuilder args = new StringBuilder("(");
                 for (T entity : list) {
-                    args.append(getKey(entity) + ",");
+                    args.append("\"" + getKey(entity) + "\"" + ",");
                 }
                 int index = args.lastIndexOf(",");
                 args.replace(index, index + 1, ")");
-                db.rawQuery("delete from " + getTableName()
-                        + " where " + getKeyName() + " in "
+                db.execSQL("DELETE FROM " + "\"" + getTableName() + "\""
+                        + " WHERE " + "\"" + getKeyName() + "\"" + " IN "
                         + args.toString(), null);
                 return null;
             }
@@ -331,10 +239,11 @@ public abstract class AbstractDao<T, KEY> {
         executeInTx(new Callback() {
             @Override
             public Cursor execute(SQLiteDatabase db) {
-                ContentValues values = getContentValues(entity);
-                String whereClause = getKeyName() + " = ?";
-                String[] whereArgs = new String[]{String.valueOf(getKey(entity))};
-                db.update(getTableName(), values, whereClause, whereArgs);
+                TableStatements statement = getTableStatement(entity);
+                String sql = SqlUtils.createSqlUpdate(getTableName(),
+                        statement.getColumns(), new String[]{getKeyName()});
+                db.execSQL(sql, SqlUtils.mergerObject(statement.getBindArgs(),
+                        new Object[]{getKey(entity)}));
                 return null;
             }
         });
@@ -348,10 +257,10 @@ public abstract class AbstractDao<T, KEY> {
         executeInTx(new Callback() {
             @Override
             public Cursor execute(SQLiteDatabase db) {
-                String whereClause = getKeyName() + " = ?";
+                String whereClause = "\"" + getKeyName() + "\"" + " = ?";
                 String[] whereArgs = new String[]{String.valueOf(key)};
-                Cursor cursor = db.rawQuery("select * from " + getTableName()
-                        + " where " + whereClause, whereArgs);
+                Cursor cursor = db.rawQuery("SELECT * FROM " + "\"" + getTableName() + "\""
+                        + " WHERE " + whereClause, whereArgs);
                 if (cursor != null && cursor.moveToFirst()) {
                     entity[0] = readEntity(cursor);
                 }
@@ -367,8 +276,8 @@ public abstract class AbstractDao<T, KEY> {
         executeInTx(new Callback() {
             @Override
             public Cursor execute(SQLiteDatabase db) {
-                Cursor cursor = db.rawQuery("select * from " + getTableName()
-                        + " limit " + limit, null);
+                Cursor cursor = db.rawQuery("SELECT * FROM " + getTableName()
+                        + " LIMIT " + limit, null);
                 while (cursor.moveToNext()) {
                     list.add(readEntity(cursor));
                 }
@@ -384,8 +293,8 @@ public abstract class AbstractDao<T, KEY> {
         executeInTx(new Callback() {
             @Override
             public Cursor execute(SQLiteDatabase db) {
-                Cursor cursor = db.rawQuery("select * from " + getTableName()
-                        + " limit " + beginIndex + "," + endIndex, null);
+                Cursor cursor = db.rawQuery("SELECT * FROM " + getTableName()
+                        + " LIMIT " + beginIndex + "," + endIndex, null);
                 while (cursor.moveToNext()) {
                     list.add(readEntity(cursor));
                 }
@@ -403,7 +312,7 @@ public abstract class AbstractDao<T, KEY> {
             public Cursor execute(SQLiteDatabase db) {
                 Cursor cursor = db.query(getTableName(),
                         null, null, null, null, null,
-                        getKeyName());
+                        null);
                 while (cursor.moveToNext()) {
                     list.add(readEntity(cursor));
                 }
@@ -413,7 +322,24 @@ public abstract class AbstractDao<T, KEY> {
         return list;
     }
 
-    protected void executeInTx(@NonNull final Callback callback) {
+    public long queryCount() {
+        final Long[] counts = new Long[1];
+        counts[0] = 0L;
+        executeInTx(new Callback() {
+            @Override
+            public Cursor execute(SQLiteDatabase db) {
+                String sql = SqlUtils.createSqlCount(getTableName());
+                Cursor cursor = db.rawQuery(sql, null);
+                if (cursor != null && cursor.moveToFirst()) {
+                    counts[0] = cursor.getLong(0);
+                }
+                return cursor;
+            }
+        });
+        return counts[0];
+    }
+
+    protected synchronized void executeInTx(@NonNull final Callback callback) {
         SQLiteDatabase db = open();
         db.beginTransaction();
         Cursor cursor = null;
@@ -421,6 +347,7 @@ public abstract class AbstractDao<T, KEY> {
             cursor = callback.execute(db);
             db.setTransactionSuccessful();
         } catch (Throwable e) {
+            Log.e("Sql", "Sql executeInTx error: " + e);
             e.printStackTrace();
         } finally {
             db.endTransaction();
