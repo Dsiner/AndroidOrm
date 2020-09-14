@@ -42,21 +42,21 @@ public abstract class AbstractDatabase extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public SQLiteDatabase getSQLiteDatabase() {
+    SQLiteDatabase getSQLiteDatabase() {
         return mDB;
     }
 
     @Deprecated
-    private synchronized SQLiteDatabase openDatabase() {
+    SQLiteDatabase openDatabase() {
         if (mOpenCounter.incrementAndGet() == 1) {
             // Opening new database
-            mDB = getReadableDatabase();
+            mDB = getWritableDatabase();
         }
         return mDB;
     }
 
     @Deprecated
-    private synchronized void closeDatabase() {
+    void closeDatabase() {
         if (mOpenCounter.decrementAndGet() == 0) {
             // Closing database
             try {

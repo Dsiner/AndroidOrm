@@ -10,7 +10,7 @@ import java.util.Map;
  * Created by D on 2020/9/11.
  */
 public class TableStatements {
-    private LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+    private final LinkedHashMap<String, Object> map = new LinkedHashMap<>();
 
     public TableStatements() {
     }
