@@ -335,19 +335,21 @@ public abstract class AbstractDao<T, KEY> {
         return counts[0];
     }
 
-    protected synchronized void executeInTx(@NonNull final Callback callback) {
-        SQLiteDatabase db = mDatabase.getSQLiteDatabase();
-        db.beginTransaction();
-        Cursor cursor = null;
-        try {
-            cursor = callback.execute(db);
-            db.setTransactionSuccessful();
-        } catch (Throwable e) {
-            Log.e("Sql", "Sql executeInTx error: " + e);
-            e.printStackTrace();
-        } finally {
-            db.endTransaction();
-            closeQuietly(cursor);
+    protected void executeInTx(@NonNull final Callback callback) {
+        synchronized (AbstractDao.class) {
+            SQLiteDatabase db = mDatabase.getSQLiteDatabase();
+            db.beginTransaction();
+            Cursor cursor = null;
+            try {
+                cursor = callback.execute(db);
+                db.setTransactionSuccessful();
+            } catch (Throwable e) {
+                Log.e("Sql", "Sql executeInTx error: " + e);
+                e.printStackTrace();
+            } finally {
+                db.endTransaction();
+                closeQuietly(cursor);
+            }
         }
     }
 

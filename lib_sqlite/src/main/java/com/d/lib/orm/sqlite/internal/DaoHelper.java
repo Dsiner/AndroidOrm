@@ -77,7 +77,7 @@ public class DaoHelper {
         int index = sql.lastIndexOf(",");
         sql.replace(index, index + 1, ");");
         db.execSQL(sql.toString());
-        Log.d("Sql", "Sql createTable:" + sql.toString());
+        Log.d("Sql", "Sql createTable: " + sql.toString());
     }
 
     /**
