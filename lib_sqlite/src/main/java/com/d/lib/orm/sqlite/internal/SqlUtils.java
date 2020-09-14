@@ -70,8 +70,8 @@ public class SqlUtils {
         return builder;
     }
 
-    public static String createSqlInsert(String tablename, String[] columns) {
-        StringBuilder builder = new StringBuilder("INSERT INTO ");
+    public static String createSqlInsert(String insertInto, String tablename, String[] columns) {
+        StringBuilder builder = new StringBuilder(insertInto);
         builder.append('"').append(tablename).append('"').append(" (");
         appendColumns(builder, columns);
         builder.append(") VALUES (");

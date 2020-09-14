@@ -112,7 +112,7 @@ public abstract class AbstractDao<T, KEY> {
             @Override
             public Cursor execute(SQLiteDatabase db) {
                 TableStatements statement = getTableStatement(entity);
-                String sql = SqlUtils.createSqlInsert(getTableName(), statement.getColumns());
+                String sql = SqlUtils.createSqlInsert("INSERT INTO ", getTableName(), statement.getColumns());
                 db.execSQL(sql, statement.getBindArgs());
                 return null;
             }
@@ -123,11 +123,9 @@ public abstract class AbstractDao<T, KEY> {
         executeInTx(new Callback() {
             @Override
             public Cursor execute(SQLiteDatabase db) {
-                if (!hasKey(entity) || query(getKey(entity)) == null) {
-                    insert(entity);
-                } else {
-                    update(entity);
-                }
+                TableStatements statement = getTableStatement(entity);
+                String sql = SqlUtils.createSqlInsert("INSERT OR REPLACE INTO ", getTableName(), statement.getColumns());
+                db.execSQL(sql, statement.getBindArgs());
                 return null;
             }
         });
@@ -139,7 +137,7 @@ public abstract class AbstractDao<T, KEY> {
             public Cursor execute(SQLiteDatabase db) {
                 for (T entity : list) {
                     TableStatements statement = getTableStatement(entity);
-                    String sql = SqlUtils.createSqlInsert(getTableName(), statement.getColumns());
+                    String sql = SqlUtils.createSqlInsert("INSERT INTO ", getTableName(), statement.getColumns());
                     db.execSQL(sql, statement.getBindArgs());
                 }
                 return null;
@@ -152,11 +150,9 @@ public abstract class AbstractDao<T, KEY> {
             @Override
             public Cursor execute(SQLiteDatabase db) {
                 for (T entity : list) {
-                    if (!hasKey(entity) || query(getKey(entity)) == null) {
-                        insert(entity);
-                    } else {
-                        update(entity);
-                    }
+                    TableStatements statement = getTableStatement(entity);
+                    String sql = SqlUtils.createSqlInsert("INSERT OR REPLACE INTO ", getTableName(), statement.getColumns());
+                    db.execSQL(sql, statement.getBindArgs());
                 }
                 return null;
             }
@@ -340,7 +336,7 @@ public abstract class AbstractDao<T, KEY> {
     }
 
     protected synchronized void executeInTx(@NonNull final Callback callback) {
-        SQLiteDatabase db = open();
+        SQLiteDatabase db = mDatabase.getSQLiteDatabase();
         db.beginTransaction();
         Cursor cursor = null;
         try {
@@ -352,16 +348,7 @@ public abstract class AbstractDao<T, KEY> {
         } finally {
             db.endTransaction();
             closeQuietly(cursor);
-            close();
         }
-    }
-
-    protected SQLiteDatabase open() {
-        return mDatabase.open();
-    }
-
-    protected void close() {
-        mDatabase.close();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)

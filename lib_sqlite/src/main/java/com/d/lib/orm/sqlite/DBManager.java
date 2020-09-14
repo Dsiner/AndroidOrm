@@ -15,7 +15,9 @@ public class DBManager extends AbstractDatabase {
     public final OpBook opBook;
 
     private DBManager(Context context) {
-        super(context);
+        super(context, "sqlite.db");
+
+        // Init option
         opBook = new OpBook(bookDao);
     }
 
