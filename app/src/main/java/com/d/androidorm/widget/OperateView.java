@@ -18,6 +18,9 @@ import com.d.androidorm.R;
  * Created by D on 2018/5/15.
  */
 public class OperateView extends LinearLayout implements View.OnClickListener {
+    public static final int STATE_DONE = 0;
+    public static final int STATE_INSERTING = 1;
+    public static final int STATE_UPDATING = 2;
     private TextView[] tvOps;
     private int state = STATE_DONE;
     private OnCallback listener;
@@ -79,10 +82,6 @@ public class OperateView extends LinearLayout implements View.OnClickListener {
         }
     }
 
-    public final static int STATE_DONE = 0;
-    public final static int STATE_INSERTING = 1;
-    public final static int STATE_UPDATING = 2;
-
     public void setState(int state) {
         switch (state) {
             case STATE_DONE:
@@ -93,6 +92,7 @@ public class OperateView extends LinearLayout implements View.OnClickListener {
                 tvOps[2].setVisibility(GONE);
                 tvOps[3].setVisibility(GONE);
                 break;
+
             case STATE_INSERTING:
                 this.state = state;
                 tvOps[0].setVisibility(GONE);
@@ -102,6 +102,7 @@ public class OperateView extends LinearLayout implements View.OnClickListener {
                 tvOps[3].setVisibility(VISIBLE);
                 tvOps[3].setText("Done");
                 break;
+
             case STATE_UPDATING:
                 this.state = state;
                 tvOps[0].setVisibility(GONE);
@@ -114,6 +115,10 @@ public class OperateView extends LinearLayout implements View.OnClickListener {
         }
     }
 
+    public void setOnCallback(OnCallback l) {
+        this.listener = l;
+    }
+
     public interface OnCallback {
         void add();
 
@@ -122,9 +127,5 @@ public class OperateView extends LinearLayout implements View.OnClickListener {
         void update();
 
         void cancel();
-    }
-
-    public void setOnCallback(OnCallback l) {
-        this.listener = l;
     }
 }

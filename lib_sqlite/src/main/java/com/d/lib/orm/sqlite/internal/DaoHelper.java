@@ -24,23 +24,6 @@ import java.util.List;
  */
 public class DaoHelper {
 
-    public static class GsonFormat {
-        private static class Singleton {
-            private static final Gson gson = new Gson();
-        }
-
-        public static <T> T fromMap(LinkedHashMap<String, Object> map, Type type) {
-            return Singleton.gson.fromJson(Singleton.gson.toJson(map), type);
-        }
-
-        public static <T> LinkedHashMap<String, Object> toHashMap(T entity) {
-            String json = Singleton.gson.toJson(entity);
-            Type type = new TypeToken<LinkedHashMap<String, String>>() {
-            }.getType();
-            return Singleton.gson.fromJson(json, type);
-        }
-    }
-
     /**
      * Creates the underlying database table.
      */
@@ -114,5 +97,22 @@ public class DaoHelper {
             }
         });
         return fields;
+    }
+
+    public static class GsonFormat {
+        public static <T> T fromMap(LinkedHashMap<String, Object> map, Type type) {
+            return Singleton.gson.fromJson(Singleton.gson.toJson(map), type);
+        }
+
+        public static <T> LinkedHashMap<String, Object> toHashMap(T entity) {
+            String json = Singleton.gson.toJson(entity);
+            Type type = new TypeToken<LinkedHashMap<String, String>>() {
+            }.getType();
+            return Singleton.gson.fromJson(json, type);
+        }
+
+        private static class Singleton {
+            private static final Gson gson = new Gson();
+        }
     }
 }

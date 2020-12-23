@@ -12,13 +12,6 @@ public class ColumnType {
     public static final String REAL = "REAL";
     public static final String TEXT = "TEXT";
 
-    @StringDef({INTEGER, REAL, TEXT})
-    @Target({ElementType.METHOD, ElementType.PARAMETER})
-    @Retention(RetentionPolicy.SOURCE)
-    @interface Type {
-
-    }
-
     public static String getColumnType(Class type) {
         if (type == int.class
                 || type == long.class
@@ -34,5 +27,12 @@ public class ColumnType {
             return TEXT;
         }
         throw new IllegalArgumentException("Unsupported data type.");
+    }
+
+    @StringDef({INTEGER, REAL, TEXT})
+    @Target({ElementType.METHOD, ElementType.PARAMETER})
+    @Retention(RetentionPolicy.SOURCE)
+    @interface Type {
+
     }
 }

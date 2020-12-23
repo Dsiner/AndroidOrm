@@ -17,11 +17,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public abstract class AbstractDatabase extends SQLiteOpenHelper {
     public static final int SCHEMA_VERSION = 1;
-
+    protected final BookDao bookDao;
     private final AtomicInteger mOpenCounter = new AtomicInteger();
     private SQLiteDatabase mDB;
-
-    protected final BookDao bookDao;
 
     public AbstractDatabase(Context context, @NonNull String name) {
         super(context, name, null, SCHEMA_VERSION);

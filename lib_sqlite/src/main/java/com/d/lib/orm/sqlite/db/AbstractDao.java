@@ -50,6 +50,53 @@ public abstract class AbstractDao<T, KEY> {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
+    public static LinkedHashMap<String, Object> map(Cursor cursor) {
+        if (cursor == null) {
+            return new LinkedHashMap<>();
+        }
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
+        for (int i = 0; i < cursor.getColumnCount(); i++) {
+            String key = cursor.getColumnName(i);
+            switch (cursor.getType(i)) {
+                case Cursor.FIELD_TYPE_STRING:
+                    map.put(key, cursor.getString(i));
+                    break;
+
+                case Cursor.FIELD_TYPE_INTEGER:
+                    map.put(key, cursor.getLong(i));
+                    break;
+
+                case Cursor.FIELD_TYPE_FLOAT:
+                    map.put(key, cursor.getDouble(i));
+                    break;
+
+                case Cursor.FIELD_TYPE_BLOB:
+                    map.put(key, cursor.getBlob(i));
+                    break;
+
+                case Cursor.FIELD_TYPE_NULL:
+                    break;
+            }
+        }
+        return map;
+    }
+
+    /**
+     * Closes {@code closeable}, ignoring any checked exceptions. Does nothing if {@code closeable} is
+     * null.
+     */
+    public static void closeQuietly(Cursor cursor) {
+        if (cursor != null) {
+            try {
+                cursor.close();
+            } catch (RuntimeException rethrown) {
+                throw rethrown;
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
     public String getTableName() {
         return mTableName;
     }
@@ -349,53 +396,6 @@ public abstract class AbstractDao<T, KEY> {
             } finally {
                 db.endTransaction();
                 closeQuietly(cursor);
-            }
-        }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
-    public static LinkedHashMap<String, Object> map(Cursor cursor) {
-        if (cursor == null) {
-            return new LinkedHashMap<>();
-        }
-        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-        for (int i = 0; i < cursor.getColumnCount(); i++) {
-            String key = cursor.getColumnName(i);
-            switch (cursor.getType(i)) {
-                case Cursor.FIELD_TYPE_STRING:
-                    map.put(key, cursor.getString(i));
-                    break;
-
-                case Cursor.FIELD_TYPE_INTEGER:
-                    map.put(key, cursor.getLong(i));
-                    break;
-
-                case Cursor.FIELD_TYPE_FLOAT:
-                    map.put(key, cursor.getDouble(i));
-                    break;
-
-                case Cursor.FIELD_TYPE_BLOB:
-                    map.put(key, cursor.getBlob(i));
-                    break;
-
-                case Cursor.FIELD_TYPE_NULL:
-                    break;
-            }
-        }
-        return map;
-    }
-
-    /**
-     * Closes {@code closeable}, ignoring any checked exceptions. Does nothing if {@code closeable} is
-     * null.
-     */
-    public static void closeQuietly(Cursor cursor) {
-        if (cursor != null) {
-            try {
-                cursor.close();
-            } catch (RuntimeException rethrown) {
-                throw rethrown;
-            } catch (Exception ignored) {
             }
         }
     }

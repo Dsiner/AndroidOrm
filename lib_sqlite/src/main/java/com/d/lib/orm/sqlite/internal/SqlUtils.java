@@ -5,7 +5,7 @@ package com.d.lib.orm.sqlite.internal;
  * Created by D on 2020/9/11.
  */
 public class SqlUtils {
-    private final static char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+    private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
 
     public static StringBuilder appendColumn(StringBuilder builder, String column) {
         builder.append('"').append(column).append('"');

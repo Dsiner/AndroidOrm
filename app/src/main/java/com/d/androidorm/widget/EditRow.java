@@ -134,51 +134,51 @@ public class EditRow extends FrameLayout {
         this.values = values;
     }
 
-    public void setNo(CharSequence text) {
-        tvNo.setText(text);
-    }
-
     public CharSequence getNo() {
         return tvNo.getText();
     }
 
-    public void setName(CharSequence text) {
-        etName.setText(text);
+    public void setNo(CharSequence text) {
+        tvNo.setText(text);
     }
 
     public CharSequence getName() {
         return etName.getText();
     }
 
-    public void setAuthor(CharSequence text) {
-        etAuthor.setText(text);
+    public void setName(CharSequence text) {
+        etName.setText(text);
     }
 
     public CharSequence getAuthor() {
         return etAuthor.getText();
     }
 
-    public void setPrice(CharSequence text) {
-        etPrice.setText(text);
+    public void setAuthor(CharSequence text) {
+        etAuthor.setText(text);
     }
 
     public CharSequence getPrice() {
         return etPrice.getText();
     }
 
-    public void setDate(CharSequence text) {
-        etDate.setText(text);
+    public void setPrice(CharSequence text) {
+        etPrice.setText(text);
     }
 
     public CharSequence getDate() {
         return etDate.getText();
     }
 
-    public interface OnTextChangedListener {
-        void afterTextChanged(String... s);
+    public void setDate(CharSequence text) {
+        etDate.setText(text);
     }
 
     public void setOnTextChangedListener(OnTextChangedListener l) {
         this.listener = l;
+    }
+
+    public interface OnTextChangedListener {
+        void afterTextChanged(String... s);
     }
 }

@@ -65,13 +65,13 @@ public abstract class OrmAdapter<T> extends CommonAdapter<T> {
 
     abstract void delete(T item);
 
+    public void setOnOperateListener(OnOperateListener<T> l) {
+        this.listener = l;
+    }
+
     public interface OnOperateListener<T> {
         void update(T item);
 
         void delete(T item);
-    }
-
-    public void setOnOperateListener(OnOperateListener<T> l) {
-        this.listener = l;
     }
 }

@@ -15,10 +15,9 @@ import com.d.lib.common.view.TitleLayout;
  * Created by D on 2018/5/15.
  */
 public abstract class OrmFragment<T> extends AbsFragment<T, OrmPresenter<T>> implements IOrmView<T> {
+    protected String mTitle;
     TitleLayout tl_title;
     OperateView v_operate;
-
-    protected String mTitle;
 
     @Override
     public void onClick(View v) {
